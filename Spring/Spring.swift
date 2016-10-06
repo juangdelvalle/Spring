@@ -131,6 +131,7 @@ public class Spring : NSObject {
         case Flash = "flash"
         case Wobble = "wobble"
         case Swing = "swing"
+        case ScaleUp = "scaleUp"
     }
     
     public enum AnimationCurve: String {
@@ -360,6 +361,21 @@ public class Spring : NSObject {
                 animation.isAdditive = true
                 animation.beginTime = CACurrentMediaTime() + CFTimeInterval(delay)
                 layer.add(animation, forKey: "swing")
+            case .ScaleUp:
+                let animation = CAKeyframeAnimation()
+                animation.keyPath = "transform.scale"
+                animation.values = [-1.0*force, -0.8*force, -0.6*force, -0.4*force, -0.2*force, 0]
+                animation.keyTimes = [0, 0.2, 0.4, 0.6, 0.8, 1]
+                animation.timingFunction = getTimingFunction(curve: curve)
+                animation.duration = CFTimeInterval(duration)
+                animation.isAdditive = true
+                if repeatCount == -1 {
+                    animation.repeatCount = Float.infinity
+                } else {
+                    animation.repeatCount = repeatCount
+                }
+                animation.beginTime = CACurrentMediaTime() + CFTimeInterval(delay)
+                layer.add(animation, forKey: "scaleUp")
             }
         }
     }
